@@ -50,11 +50,18 @@ export function contextUsage(
 ) {
   const last = lastAssistantWithUsage(messages, boundary)
   if (!last) return
-  const tokens =
-    last.tokens.input + last.tokens.output + last.tokens.reasoning + last.tokens.cache.read + last.tokens.cache.write
+  const input = last.tokens.input
+  const output = last.tokens.output
+  const reasoning = last.tokens.reasoning
+  const cache = last.tokens.cache.read + last.tokens.cache.write
+  const tokens = input + output + reasoning + cache
   if (tokens <= 0) return
   const model = models?.find((model) => model.providerID === last.model.providerID && model.id === last.model.id)
   return {
+    input,
+    output,
+    reasoning,
+    cache,
     tokens,
     percent: model?.limit.context ? Math.round((tokens / model.limit.context) * 100) : undefined,
   }
