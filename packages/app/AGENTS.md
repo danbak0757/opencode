@@ -123,3 +123,7 @@ Core workflow:
 2. `agent-browser snapshot -i` - Get interactive elements with refs (@e1, @e2)
 3. `agent-browser click @e1` / `fill @e2 "text"` - Interact using refs
 4. Re-snapshot after page changes
+
+## Live Desktop Diagnostics
+- When attaching Playwright to a running desktop app, use `chromium.connectOverCDP(endpoint, { noDefaults: true })`. Without `noDefaults`, color-scheme emulation can flash light mode and change focus/media settings.
+- Do not emulate color scheme or reduced motion on the user's live window unless requested; use an isolated test context.
