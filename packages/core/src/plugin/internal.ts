@@ -1,6 +1,7 @@
 export * as PluginInternal from "./internal.js"
 
 import { LLMClient } from "@opencode/ai/effect"
+import { fromPromise } from "@opencode/plugin/promise/adapter"
 import type { Plugin } from "@opencode/plugin/effect/plugin"
 import { LayerNode } from "@opencode/util/effect/layer-node"
 import { httpClient } from "@opencode/util/effect/app-node-platform"
@@ -109,6 +110,8 @@ import { VcsGitPlugin } from "./vcs/git.js"
 import { VerbosityPlugin } from "./verbosity.js"
 import { WarmingPlugin } from "./warming.js"
 import { WellKnownPlugin } from "../wellknown/plugin.js"
+import CustomTeamRunPlugin from "./custom/team-run.js"
+import CustomWorkModePlugin from "./custom/work-mode.js"
 
 const services = [
   Agent.Service,
@@ -278,6 +281,8 @@ const post = [
   ConfigProviderPlugin.Plugin,
   ConfigWebSearchPlugin.Plugin,
   ConfigPolicyPlugin.Plugin,
+  fromPromise(CustomTeamRunPlugin),
+  fromPromise(CustomWorkModePlugin),
 ] as const satisfies readonly InternalPlugin[]
 
 // Repository config must not switch off policy enforcement or the Console connection that delivers

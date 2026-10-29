@@ -6,7 +6,7 @@ Ta gałąź jest niezależną, eksperymentalną wersją OpenCode rozwijaną na b
 
 Dostosować terminalowe OpenCode do pracy nad zadaniami programistycznymi z pomocą polskojęzycznego, wieloagentowego zespołu. Priorytetem jest jakość zaakceptowanego rezultatu przy możliwie niskim całkowitym koszcie — z uwzględnieniem delegowania, review, poprawek i czasu użytkownika.
 
-Gotowy do skopiowania pakiet agentów i ustawień znajduje się w [`custom-config/`](./custom-config/README.md). Samo sklonowanie repozytorium nie instaluje tych plików do globalnej konfiguracji użytkownika.
+Gotowy do skopiowania pakiet agentów i ustawień znajduje się w [`custom-config/`](./custom-config/README.md). Build z tego repozytorium osadza te agenty, instrukcje i pluginy jako domyślne; nie zapisuje ich ani nie nadpisuje konfiguracji użytkownika.
 
 ## Tryby pracy
 
@@ -14,7 +14,7 @@ Gotowy do skopiowania pakiet agentów i ustawień znajduje się w [`custom-confi
 - **Diagnostyka** — badanie problemu bez modyfikowania plików.
 - **Automat** — realizacja uzgodnionego zakresu, z kontrolą i weryfikacją rezultatu.
 
-Interfejs udostępnia wybór trybu oraz listę agentów i ich widocznych stanów. Wybór trybu przekazywany jest do nowej sesji. Tryby z ograniczonym zapisem ustawiają uprawnienia sesji, ale nie należy traktować samego interfejsu ani opisu trybu jako gwarancji bezpieczeństwa — skuteczność granic trzeba sprawdzać dla używanej konfiguracji i narzędzi.
+Interfejs udostępnia wybór trybu oraz listę agentów i ich widocznych stanów. Wybór trybu przekazywany jest do nowej sesji. Tryby z ograniczonym zapisem ustawiają uprawnienia sesji, ale nie należy traktować samego interfejsu ani opisu trybu jako gwarancji bezpieczeństwa — skuteczność granic trzeba sprawdzać dla używanej konfiguracji i narzędzi. Konfiguracja użytkownika i projektu może nadpisać domyślnych agentów.
 
 ## Zasady projektu
 

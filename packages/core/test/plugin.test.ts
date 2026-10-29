@@ -9,10 +9,13 @@ import { Bus } from "@opencode/core/bus"
 import { Credential } from "@opencode/core/credential"
 import { Integration } from "@opencode/core/integration"
 import { Plugin } from "@opencode/core/plugin"
+import { Tool } from "@opencode/core/tool"
 import { PluginHost } from "@opencode/core/plugin/host"
 import { Rpc } from "@opencode/core/rpc"
 import { Event } from "@opencode/schema/config"
 import { PluginModule } from "@opencode/core/plugin/module"
+import CustomTeamRunPlugin from "@opencode/core/plugin/custom/team-run"
+import CustomWorkModePlugin from "@opencode/core/plugin/custom/work-mode"
 import { Session } from "@opencode/core/session"
 import { SessionSchema } from "@opencode/core/session/schema"
 import { Watcher } from "@opencode/core/filesystem/watcher"
@@ -21,6 +24,25 @@ import { testEffect } from "./lib/effect"
 import { PluginTestLayer } from "./plugin/fixture"
 
 const it = testEffect(PluginTestLayer)
+
+it.live("activates bundled agent plugins and registers team_run", () =>
+  Effect.gen(function* () {
+    const plugins = yield* Plugin.Service
+    const tools = yield* Tool.Service
+    yield* plugins.activate(
+      [CustomTeamRunPlugin, CustomWorkModePlugin].map((plugin) => ({
+        ...fromPromise(plugin),
+        revision: "test",
+        source: { type: "builtin" as const },
+      })),
+    )
+
+    expect((yield* tools.list()).map((tool) => tool.name)).toContain("team_run")
+    expect((yield* plugins.list()).map((plugin) => plugin.id)).toContain(
+      Plugin.ID.make("custom-open-code.builtin-work-mode"),
+    )
+  }),
+)
 
 for (const scenario of [
   {

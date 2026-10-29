@@ -8,6 +8,7 @@ import { Config } from "@opencode/core/config"
 import { Directory, Document, Event, Info } from "@opencode/schema/config"
 import { Model } from "@opencode/schema/model"
 import { ConfigAgentPlugin } from "@opencode/core/config/plugin/agent"
+import { CustomAgentFiles } from "@opencode/core/plugin/custom-agents"
 import { AppNodeBuilder } from "@opencode/core/effect/app-node-builder"
 import { LayerNode } from "@opencode/util/effect/layer-node"
 import { FSUtil } from "@opencode/util/fs-util"
@@ -63,6 +64,46 @@ test("keeps schema fields and name out of legacy agent options", () => {
 })
 
 describe("ConfigAgentPlugin.Plugin", () => {
+  it.live("selects the bundled coordinator when no user or project default is configured", () =>
+    Effect.gen(function* () {
+      const agents = yield* Agent.Service
+      yield* ConfigAgentPlugin.Plugin.effect(host({ agent: agentHost(agents) })).pipe(
+        Effect.provide(Config.testLayer()),
+      )
+
+      expect(CustomAgentFiles).toHaveLength(67)
+      expect((yield* agents.list()).filter((agent) => /^\d{2}-/.test(agent.id))).toHaveLength(CustomAgentFiles.length)
+      expect(yield* agents.resolve()).toMatchObject({ id: "01-koordynator-główny", mode: "primary" })
+    }),
+  )
+
+  it.live("loads the bundled agent catalog by default and keeps project overrides authoritative", () =>
+    Effect.gen(function* () {
+      const agents = yield* Agent.Service
+      const coordinator = "01-koordynator-główny"
+      const projectDefault = "project-coordinator"
+      const override = new Document({
+        type: "document",
+        info: decode({
+          default_agent: projectDefault,
+          agents: {
+            [coordinator]: { description: "Project-specific coordinator" },
+            [projectDefault]: { description: "Project default", mode: "primary" },
+          },
+        }),
+      })
+
+      yield* ConfigAgentPlugin.Plugin.effect(host({ agent: agentHost(agents) })).pipe(
+        Effect.provide(Config.testLayer([override])),
+      )
+
+      expect(CustomAgentFiles).toHaveLength(67)
+      expect((yield* agents.list()).filter((agent) => /^\d{2}-/.test(agent.id))).toHaveLength(CustomAgentFiles.length)
+      expect(yield* agents.resolve()).toMatchObject({ id: projectDefault })
+      expect(yield* agents.get(Agent.ID.make(coordinator))).toMatchObject({ description: "Project-specific coordinator" })
+    }),
+  )
+
   for (const item of [
     { name: "separate legacy variant", frontmatter: "model: example/chat\nvariant: high", model: "example/chat#high" },
     { name: "unqualified model", frontmatter: "model: example/chat", model: "example/chat" },

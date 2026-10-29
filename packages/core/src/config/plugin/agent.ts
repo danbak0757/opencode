@@ -13,6 +13,7 @@ import { ConfigAgentV1 } from "../../v1/config/agent.js"
 import { ConfigMigrateV1 } from "../../v1/config/migrate.js"
 import { Global } from "@opencode/util/global"
 import { Permission } from "../../permission.js"
+import { CustomAgentFiles, CustomDefaultAgent } from "../../plugin/custom-agents.js"
 import type { FileAccess } from "../../file-access.js"
 import type { ReadTool } from "../../tool/plugin/read.js"
 import type { EditTool } from "../../tool/plugin/edit.js"
@@ -50,7 +51,26 @@ export const Plugin = define({
       ).pipe(Effect.map((documents) => documents.filter((document): document is Document => document !== undefined)))
     })
     const load = Effect.fn("ConfigAgentPlugin.load")(function* () {
-      return yield* Effect.forEach(yield* config.entries(), loadEntry).pipe(Effect.map((documents) => documents.flat()))
+      const customDirectory = path.join(global.config, "custom-config", "agents")
+      const customDefault = new Document({
+        type: "document",
+        path: AbsolutePath.make(path.join(global.config, "custom-config", "opencode.jsonc")),
+        info: Info.make({ default_agent: CustomDefaultAgent }),
+      })
+      const customAgents = yield* Effect.forEach(CustomAgentFiles, (file) =>
+        decode(
+          {
+            directory: customDirectory,
+            filepath: path.join(customDirectory, file.filename),
+            primary: false,
+          },
+          file.content,
+        ),
+      ).pipe(Effect.map((documents) => documents.filter((document): document is Document => document !== undefined)))
+      const configured = yield* Effect.forEach(yield* config.entries(), loadEntry).pipe(
+        Effect.map((documents) => documents.flat()),
+      )
+      return [customDefault, ...customAgents, ...configured]
     })
     const loaded = { documents: [] as Document[] }
     const reload = load().pipe(

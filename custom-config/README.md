@@ -1,6 +1,6 @@
 # Custom Config
 
-Ten katalog pakuje niestandardową konfigurację projektu OpenCode. To pliki źródłowe — samo sklonowanie ani zbudowanie repozytorium nie instaluje ich automatycznie.
+Ten katalog zawiera przenośny pakiet konfiguracji OpenCode. W niestandardowym buildzie z tego repozytorium agenci, instrukcje trybów i pluginy agentowe są osadzone w aplikacji i ładują się automatycznie. Pliki tutaj są również dostępne do ręcznego użycia z inną instalacją.
 
 ## Zawartość
 
@@ -8,19 +8,16 @@ Ten katalog pakuje niestandardową konfigurację projektu OpenCode. To pliki źr
 - `project/.opencode/agents/` — 67 agentów projektowych.
 - `project/.opencode/COORDINATION.md` — zasady współpracy, granice bezpieczeństwa i format raportowania.
 - `project/04-zrodla-i-licencje.md` — procedura źródeł oraz licencji, do której odwołują się instrukcje.
-- `user/plugins/team-run.ts` — równoległe uruchamianie niezależnych zadań agentów, odbiór wyników i kontrola nakładających się zakresów zapisu.
-- `user/plugins/work-mode.ts` — dołączanie instrukcji Planowania, Diagnostyki lub Automatu do kontekstu sesji.
+- `user/plugins/team-run.ts` i `user/plugins/work-mode.ts` — kompatybilne kopie pluginów dla ręcznej instalacji; w naszym custom buildzie ich odpowiedniki są wbudowane.
 - `user/AGENTS.md` i `user/question-protocol.md` — opcjonalne reguły globalne dla konfiguracji użytkownika.
 
 ## Użycie w projekcie
 
-Skopiuj `project/opencode.jsonc` do katalogu głównego projektu pod nazwą `opencode.jsonc`. Scal zawartość `project/.opencode/` z katalogiem `.opencode/` projektu — nie zastępuj całego istniejącego `.opencode/`. Skopiuj też `project/04-zrodla-i-licencje.md` do katalogu głównego projektu.
+Przy używaniu naszego custom builda nie musisz instalować tych plików ręcznie. Dla innej instalacji skopiuj `project/opencode.jsonc` do katalogu głównego projektu jako `opencode.jsonc`. Scal zawartość `project/.opencode/` z katalogiem `.opencode/` projektu — nie zastępuj całego istniejącego `.opencode/`. Skopiuj też `project/04-zrodla-i-licencje.md` do katalogu głównego projektu.
 
 ## Opcjonalna konfiguracja użytkownika
 
-Aby udostępnić narzędzie `team_run` i instrukcje trybów we wszystkich projektach, skopiuj `user/plugins/*.ts` do katalogu `plugins/` globalnej konfiguracji OpenCode (w Windows zwykle `%USERPROFILE%\.config\opencode\plugins\`). Pliki `user/AGENTS.md` i `user/question-protocol.md` kopiuj tylko wtedy, gdy chcesz włączyć te zasady globalnie. Przed scaleniem lub zastąpieniem istniejących plików zrób ich kopię.
-
-Sam przełącznik trybów w sidebarze jest częścią niestandardowego TUI z tego repozytorium. Plugin `work-mode.ts` wymaga tego buildu; skopiowanie go do standardowej, niezależnej instalacji OpenCode nie doda kontrolki UI.
+W naszym custom buildzie nie kopiuj pluginów do globalnego katalogu — są wbudowane. Pliki `user/AGENTS.md` i `user/question-protocol.md` również są dołączane do kontekstu przez wbudowany plugin trybów; można je skopiować globalnie tylko w innej instalacji. Kontrolka trybów w sidebarze jest częścią TUI skompilowanego z tego repozytorium i nie pojawi się w standardowym, niezależnym buildzie OpenCode.
 
 ## Bezpieczeństwo i zakres
 
