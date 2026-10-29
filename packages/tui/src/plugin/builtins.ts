@@ -6,6 +6,7 @@ import SidebarFooter from "../feature-plugins/sidebar/footer"
 import SidebarLimit from "../feature-plugins/sidebar/limit"
 import SidebarMcp from "../feature-plugins/sidebar/mcp"
 import SidebarTodo from "../feature-plugins/sidebar/todo"
+import SidebarWorkMode from "../feature-plugins/sidebar/work-mode"
 import DiffViewer from "../feature-plugins/system/diff-viewer"
 import Notifications from "../feature-plugins/system/notifications"
 import Plugins from "../feature-plugins/system/plugins"
@@ -19,8 +20,9 @@ export const builtins = [
   PromptFooter,
   PromptBtw,
   SidebarContext,
-  SidebarLimit,
   SidebarMcp,
+  SidebarWorkMode,
+  SidebarLimit,
   SidebarTodo,
   SidebarFooter,
   Notifications,

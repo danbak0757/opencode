@@ -1586,6 +1586,8 @@ export function createData(config: CreateDataInput) {
         model?: ModelRef
         location?: LocationRef
         projectID?: string
+        metadata?: SessionInfo["metadata"]
+        permissions?: SessionInfo["permissions"]
       }) {
         const { projectID, ...payload } = input
         const id = payload.id ?? SessionID.create()
@@ -1599,6 +1601,8 @@ export function createData(config: CreateDataInput) {
             projectID: projectID ?? store.location[locationKey(location)]?.info?.project.id ?? "",
             agent: payload.agent,
             model: payload.model,
+            metadata: payload.metadata,
+            permissions: payload.permissions,
             cost: 0,
             tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
             time: { created: now, updated: now },

@@ -8,6 +8,9 @@
   </a>
 </p>
 <p align="center">The open source AI coding agent.</p>
+
+> **Custom fork:** This repository also contains a Polish-language work-mode experiment and sidebar enhancements. These changes are maintained independently and are not part of the official OpenCode release. See [Custom version overview](./CUSTOM-VERSION.md).
+
 <p align="center">
   <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/@opencode/cli"><img alt="npm" src="https://img.shields.io/npm/v/@opencode/cli?style=flat-square" /></a>

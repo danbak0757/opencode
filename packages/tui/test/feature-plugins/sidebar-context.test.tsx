@@ -37,7 +37,7 @@ function context(options?: {
   } as unknown as Context
 }
 
-test("sidebar omits context before usage is available", async () => {
+test("sidebar shows session usage sections before usage is available", async () => {
   const app = await testRender(() => <SidebarContext context={context()} sessionID="session" />, {
     width: 42,
     height: 8,
@@ -45,7 +45,8 @@ test("sidebar omits context before usage is available", async () => {
 
   try {
     await app.renderOnce()
-    expect(app.captureCharFrame()).not.toContain("Context")
+    expect(app.captureCharFrame()).toContain("Sesja")
+    expect(app.captureCharFrame()).not.toContain("Tokens")
     expect(app.captureCharFrame()).not.toContain("Not measured")
   } finally {
     app.renderer.destroy()

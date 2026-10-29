@@ -15,6 +15,8 @@ import { useTheme } from "../context/theme"
 import { useUpdateNotification } from "../context/update-notification"
 import { useExit } from "../context/exit"
 import { FadeInText } from "../component/fade-in-text"
+import { isWorkMode, WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../context/work-mode"
+import { useStorage } from "../context/storage"
 
 let once = false
 const placeholder = {
@@ -30,6 +32,13 @@ export function Home() {
   const local = useLocal()
   const editor = useEditorContext()
   const data = useData()
+  const storage = useStorage()
+  const [workMode, updateWorkMode] = storage.store<WorkModePreference>(WORK_MODE_STORAGE_KEY, {
+    initial: { mode: "Automat" },
+  })
+  const [activeWorkMode, setActiveWorkMode] = storage.memory<WorkModePreference>("active-work-mode", {
+    initial: { mode: workMode.mode },
+  })
   const location = useLocation()
   const dimensions = useTerminalDimensions()
   const [logoWidth, setLogoWidth] = createSignal(0)
@@ -99,6 +108,17 @@ export function Home() {
         <box height={1} flexShrink={0} />
         <UpdateNotification width={logoWidth()} />
         <box width="100%" maxWidth={75} zIndex={1000} paddingTop={1} flexShrink={0} position="relative">
+          <Slot
+            path="home.prompt"
+            input={{
+              workMode: activeWorkMode.mode,
+              onWorkModeChange: (mode) => {
+                if (!isWorkMode(mode)) return
+                setActiveWorkMode((draft) => void (draft.mode = mode))
+                void updateWorkMode((draft) => void (draft.mode = mode))
+              },
+            }}
+          />
           <Prompt ref={bind} placeholders={placeholder} disabled={forms().length > 0} />
         </box>
         <box flexGrow={1} minHeight={0} />

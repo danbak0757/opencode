@@ -1155,11 +1155,13 @@ test("preserves sibling catalogs through location preload, branch, shell, and we
 
 test("reports optimistic sessions as creating until the request settles", async () => {
   const release = Promise.withResolvers<void>()
+  const requests: unknown[] = []
   const api = OpenCode.make({
     baseUrl: "http://opencode.local",
     fetch: async (input, init) => {
       const request = input instanceof Request ? input : new Request(input, init)
       if (!request.url.endsWith("/api/session")) throw new Error(`Unexpected request: ${request.url}`)
+      requests.push(await request.json())
       await release.promise
       return Response.json({ data: session(0) })
     },
@@ -1174,11 +1176,19 @@ test("reports optimistic sessions as creating until the request settles", async 
   }))
 
   try {
-    const created = setup.data.session.create({ id: "ses_refresh", location: { directory: "/project" } })
+    const metadata = { "customOpenCode.workMode": "Planowanie" }
+    const permissions = [{ action: "*", resource: "*", effect: "deny" as const }]
+    const created = setup.data.session.create({
+      id: "ses_refresh",
+      location: { directory: "/project" },
+      metadata,
+      permissions,
+    })
     expect(setup.data.session.creating(created.id)).toBe(true)
     release.resolve()
     await created.request
     expect(setup.data.session.creating(created.id)).toBe(false)
+    expect(requests).toEqual([{ id: "ses_refresh", location: { directory: "/project" }, metadata, permissions }])
   } finally {
     setup.dispose()
   }

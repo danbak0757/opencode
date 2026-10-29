@@ -71,6 +71,22 @@ import { useWorkingDirectoryActions } from "../../ui/working-directory-actions"
 import { truncateFilePath } from "../../ui/file-path"
 import { PromptMetadataRow } from "./metadata"
 import { limitLabel, useUsageLimits } from "../usage"
+import { WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../../context/work-mode"
+import { useStorage } from "../../context/storage"
+
+interface SessionPermissionRule {
+  action: string
+  resource: string
+  effect: "allow" | "deny" | "ask"
+}
+
+const MODE_METADATA_KEY = "customOpenCode.workMode"
+const BASE_PERMISSIONS_METADATA_KEY = "customOpenCode.basePermissions"
+const READ_ONLY_ACTIONS = ["read", "glob", "grep", "subagent", "skill", "question", "webfetch", "websearch", "execute"]
+const READ_ONLY_PERMISSIONS: SessionPermissionRule[] = [
+  { action: "*", resource: "*", effect: "deny" },
+  ...READ_ONLY_ACTIONS.map((action) => ({ action, resource: "*", effect: "allow" as const })),
+]
 
 export type PromptProps = {
   sessionID?: string
@@ -197,6 +213,13 @@ export function Prompt(props: PromptProps) {
   const terminalEnvironment = useTuiTerminalEnvironment()
   const clipboard = useClipboard()
   const client = useClient()
+  const storage = useStorage()
+  const [savedWorkMode] = storage.store<WorkModePreference>(WORK_MODE_STORAGE_KEY, {
+    initial: { mode: "Automat" },
+  })
+  const [workModePreference] = storage.memory<WorkModePreference>("active-work-mode", {
+    initial: { mode: savedWorkMode.mode },
+  })
   const editor = useEditorContext()
   const route = useRoute()
   const promptRef = usePromptRef()
@@ -1235,6 +1258,7 @@ export function Prompt(props: PromptProps) {
       // immediately — enter feels sent even while the create round-trip is in
       // flight. Sends against the new session gate on the request.
       const newSessionID = args.takeNewSessionID()
+      const selectedWorkMode = workModePreference.mode
       const created = data.session.create({
         id: newSessionID,
         location: directory ? { directory } : location,
@@ -1244,12 +1268,41 @@ export function Prompt(props: PromptProps) {
           id: selection.modelID,
           variant,
         },
+        metadata: { [MODE_METADATA_KEY]: selectedWorkMode },
       })
       if (newSessionID !== undefined) created.request.catch(() => args.restoreNewSessionID(newSessionID))
       sessionID = created.id
       session = data.session.get(created.id)
       newSession = {
         gate: created.request.then(async (info) => {
+          if (selectedWorkMode === "Planowanie" || selectedWorkMode === "Diagnostyka") {
+            const baseline = info.permissions ?? []
+            const restrictedActions =
+              selectedWorkMode === "Planowanie" ? [...READ_ONLY_ACTIONS, "edit", "external_directory"] : READ_ONLY_ACTIONS
+            await client.api.session.update({
+              sessionID: created.id,
+              metadata: {
+                ...info.metadata,
+                [MODE_METADATA_KEY]: selectedWorkMode,
+                [BASE_PERMISSIONS_METADATA_KEY]: baseline.map((rule) => ({ ...rule })),
+              },
+              permissions: [
+                ...baseline,
+                ...READ_ONLY_PERMISSIONS,
+                ...(selectedWorkMode === "Planowanie"
+                  ? [
+                      { action: "edit", resource: "*", effect: "ask" as const },
+                      { action: "external_directory", resource: "*", effect: "ask" as const },
+                    ]
+                  : []),
+                ...baseline.flatMap((rule) => {
+                  if (rule.effect === "allow") return []
+                  if (rule.action === "*") return restrictedActions.map((action) => ({ ...rule, action }))
+                  return restrictedActions.includes(rule.action) ? [rule] : []
+                }),
+              ],
+            })
+          }
           if (terminalEnvironment.variables !== undefined) {
             await client.api.session.environment({ sessionID: created.id, variables: terminalEnvironment.variables })
           }
