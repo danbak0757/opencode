@@ -48,7 +48,7 @@ function context(options: ContextOptions = {}) {
   const warning = RGBA.fromInts(220, 170, 20)
   const error = RGBA.fromInts(220, 50, 50)
   const agents = options.agents ?? [
-    { id: "01-koordynator-główny", name: "01-koordynator-główny", description: "Lead Coordinator" },
+    { id: "01-koordynator-główny", name: "01-koordynator-główny", description: "Koordynator główny" },
     { id: "planner", name: "planner", description: "Planner" },
     { id: "builder", name: "builder", description: "Builder" },
     { id: "reviewer", name: "reviewer", description: "Reviewer" },

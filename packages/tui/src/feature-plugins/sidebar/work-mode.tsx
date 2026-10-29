@@ -3,6 +3,7 @@ import { Plugin } from "@opencode/plugin/tui"
 import { createMemo, createSignal, For, Show } from "solid-js"
 import { SidebarSectionHeading } from "./section-heading"
 import { normalizeWorkMode, type WorkMode } from "../../context/work-mode"
+import { CUSTOM_AGENT_LABELS } from "./custom-agent-labels"
 
 const WORK_MODES = ["Planning", "Diagnostics", "Automation"] as const satisfies readonly WorkMode[]
 type AgentStatus = "completed" | "queued" | "working" | "error" | "decision" | "idle"
@@ -214,7 +215,7 @@ export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: str
               <box flexDirection="row" gap={1} minWidth={0}>
                 <text fg={statusColor(theme, status)}>{STATUS_ICON[status] || " "}</text>
                 <text flexGrow={1} fg={status === "idle" ? theme.text.muted : theme.text.base} wrapMode="none" truncate>
-                  {agent.description || agent.name}
+                  {CUSTOM_AGENT_LABELS[agent.id] ?? agent.description ?? agent.name}
                 </text>
               </box>
             )}
