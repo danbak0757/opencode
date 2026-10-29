@@ -1,5 +1,5 @@
 ---
-description: "Weryfikator źródeł i twierdzeń — C. Badania i źródła"
+description: "Source Verifier"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Specjalista integracji — E. Architektura i inżynieria"
+description: "Integration Engineer"
 mode: subagent
 permissions:
   - action: subagent

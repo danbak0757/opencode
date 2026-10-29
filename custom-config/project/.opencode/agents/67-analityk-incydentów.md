@@ -1,5 +1,5 @@
 ---
-description: "Analityk incydentów — J. Koszt i obsługa"
+description: "Incident Analyst"
 mode: subagent
 permissions:
   - action: subagent

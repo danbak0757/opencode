@@ -1,5 +1,5 @@
 ---
-description: "Koordynator główny — A. Kierownictwo i koordynacja"
+description: "Lead Coordinator"
 mode: primary
 permissions:
   - action: subagent

@@ -38,8 +38,10 @@ interface WorkModePluginContext {
   }
 }
 
-function isWorkMode(value: unknown): value is WorkMode {
-  return typeof value === "string" && Object.hasOwn(MODE_INSTRUCTIONS, value)
+function normalizeWorkMode(value: unknown): WorkMode | undefined {
+  if (value === "Planning" || value === "Planowanie") return "Planowanie"
+  if (value === "Diagnostics" || value === "Diagnostyka") return "Diagnostyka"
+  if (value === "Automation" || value === "Automat") return "Automat"
 }
 
 export default {
@@ -48,7 +50,7 @@ export default {
     const applyMode = async (event: ModeContextEvent) => {
       const session = await ctx.session.get({ sessionID: event.sessionID })
       const saved = session.metadata?.[MODE_METADATA_KEY]
-      const mode: WorkMode = isWorkMode(saved) ? saved : "Automat"
+      const mode: WorkMode = normalizeWorkMode(saved) ?? "Automat"
       event.system.push({ type: "text", text: MODE_INSTRUCTIONS[mode] })
     }
 

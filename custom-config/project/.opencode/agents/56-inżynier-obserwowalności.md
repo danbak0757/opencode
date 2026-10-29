@@ -1,5 +1,5 @@
 ---
-description: "Inżynier obserwowalności — H. Platforma, wdrażanie i operacje"
+description: "Observability Engineer"
 mode: subagent
 permissions:
   - action: subagent

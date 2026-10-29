@@ -1,5 +1,5 @@
 ---
-description: "Inżynier frontend — E. Architektura i inżynieria"
+description: "Frontend Engineer"
 mode: subagent
 permissions:
   - action: subagent

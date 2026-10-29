@@ -1,5 +1,5 @@
 ---
-description: "Specjalista lokalizacji — I. Dokumentacja i komunikacja"
+description: "Localization Specialist"
 mode: subagent
 permissions:
   - action: subagent

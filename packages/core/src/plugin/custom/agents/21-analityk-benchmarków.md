@@ -1,5 +1,5 @@
 ---
-description: "Analityk benchmarków — C. Badania i źródła"
+description: "Benchmark Analyst"
 mode: subagent
 permissions:
   - action: subagent

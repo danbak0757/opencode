@@ -1,5 +1,5 @@
 ---
-description: "Inżynier testów E2E — F. Testowanie i jakość"
+description: "E2E Test Engineer"
 mode: subagent
 permissions:
   - action: subagent

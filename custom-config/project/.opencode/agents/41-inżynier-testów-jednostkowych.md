@@ -1,5 +1,5 @@
 ---
-description: "Inżynier testów jednostkowych — F. Testowanie i jakość"
+description: "Unit Test Engineer"
 mode: subagent
 permissions:
   - action: subagent

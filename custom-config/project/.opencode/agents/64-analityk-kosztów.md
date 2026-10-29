@@ -1,5 +1,5 @@
 ---
-description: "Analityk kosztów — J. Koszt i obsługa"
+description: "Cost Analyst"
 mode: subagent
 permissions:
   - action: subagent

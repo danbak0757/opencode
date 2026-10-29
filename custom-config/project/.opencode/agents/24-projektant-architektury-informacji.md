@@ -1,5 +1,5 @@
 ---
-description: "Projektant architektury informacji — D. Projektowanie i doświadczenie użytkownika"
+description: "IA Designer"
 mode: subagent
 permissions:
   - action: subagent

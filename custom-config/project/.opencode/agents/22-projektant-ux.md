@@ -1,5 +1,5 @@
 ---
-description: "Projektant UX — D. Projektowanie i doświadczenie użytkownika"
+description: "UX Designer"
 mode: subagent
 permissions:
   - action: subagent

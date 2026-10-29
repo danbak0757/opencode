@@ -1,5 +1,5 @@
 ---
-description: "Badacz istniejących rozwiązań — C. Badania i źródła"
+description: "Solutions Researcher"
 mode: subagent
 permissions:
   - action: subagent

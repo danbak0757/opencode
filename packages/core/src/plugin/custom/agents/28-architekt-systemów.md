@@ -1,5 +1,5 @@
 ---
-description: "Architekt systemów — E. Architektura i inżynieria"
+description: "Systems Architect"
 mode: subagent
 permissions:
   - action: subagent

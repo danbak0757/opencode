@@ -1,5 +1,5 @@
 ---
-description: "Inżynier AI/LLM — E. Architektura i inżynieria"
+description: "AI Engineer"
 mode: subagent
 permissions:
   - action: subagent

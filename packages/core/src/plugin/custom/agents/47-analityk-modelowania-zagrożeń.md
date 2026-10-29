@@ -1,5 +1,5 @@
 ---
-description: "Analityk modelowania zagrożeń — G. Bezpieczeństwo, prywatność i zgodność"
+description: "Threat Analyst"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Specjalista dostępności — D. Projektowanie i doświadczenie użytkownika"
+description: "Accessibility Specialist"
 mode: subagent
 permissions:
   - action: subagent

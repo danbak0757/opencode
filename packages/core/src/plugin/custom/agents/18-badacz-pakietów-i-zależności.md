@@ -1,5 +1,5 @@
 ---
-description: "Badacz pakietów i zależności — C. Badania i źródła"
+description: "Dependency Researcher"
 mode: subagent
 permissions:
   - action: subagent

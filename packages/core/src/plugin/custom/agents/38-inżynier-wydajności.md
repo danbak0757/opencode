@@ -1,5 +1,5 @@
 ---
-description: "Inżynier wydajności — E. Architektura i inżynieria"
+description: "Performance Engineer"
 mode: subagent
 permissions:
   - action: subagent

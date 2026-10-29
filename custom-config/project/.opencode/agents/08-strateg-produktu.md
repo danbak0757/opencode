@@ -1,5 +1,5 @@
 ---
-description: "Strateg produktu — B. Produkt i analiza potrzeb"
+description: "Product Strategist"
 mode: subagent
 permissions:
   - action: subagent

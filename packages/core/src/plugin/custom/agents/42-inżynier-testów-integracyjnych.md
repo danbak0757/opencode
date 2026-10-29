@@ -1,5 +1,5 @@
 ---
-description: "Inżynier testów integracyjnych — F. Testowanie i jakość"
+description: "Integration Test Engineer"
 mode: subagent
 permissions:
   - action: subagent

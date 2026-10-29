@@ -3,6 +3,7 @@ import { expect, test } from "bun:test"
 import { BoxRenderable, RGBA } from "@opentui/core"
 import { testRender } from "@opentui/solid"
 import type { Context } from "@opencode/plugin/tui/context"
+import { normalizeWorkMode } from "../../src/context/work-mode"
 import { SidebarWorkMode } from "../../src/feature-plugins/sidebar/work-mode"
 
 interface AgentFixture {
@@ -34,6 +35,12 @@ interface ContextOptions {
   }>
 }
 
+test("normalizes legacy stored work modes before session creation", () => {
+  expect(normalizeWorkMode("Planowanie")).toBe("Planning")
+  expect(normalizeWorkMode("Diagnostyka")).toBe("Diagnostics")
+  expect(normalizeWorkMode("Automat")).toBe("Automation")
+})
+
 function context(options: ContextOptions = {}) {
   const base = RGBA.fromInts(200, 200, 200)
   const success = RGBA.fromInts(20, 180, 90)
@@ -41,10 +48,10 @@ function context(options: ContextOptions = {}) {
   const warning = RGBA.fromInts(220, 170, 20)
   const error = RGBA.fromInts(220, 50, 50)
   const agents = options.agents ?? [
-    { id: "01-koordynator-główny", name: "01-koordynator-główny", description: "Koordynator" },
-    { id: "planner", name: "planner", description: "Planista" },
-    { id: "builder", name: "builder", description: "Wykonawca" },
-    { id: "reviewer", name: "reviewer", description: "Recenzent" },
+    { id: "01-koordynator-główny", name: "01-koordynator-główny", description: "Lead Coordinator" },
+    { id: "planner", name: "planner", description: "Planner" },
+    { id: "builder", name: "builder", description: "Builder" },
+    { id: "reviewer", name: "reviewer", description: "Reviewer" },
   ]
   const sessions = options.sessions ?? [
     { id: "root", agent: "01-koordynator-główny", time: { updated: "2026-01-01T00:00:00Z" } },
@@ -116,16 +123,46 @@ test("sidebar displays selectable work modes and loaded agents", async () => {
   try {
     await app.renderOnce()
     const frame = app.captureCharFrame()
-    expect(frame).toContain("Tryb pracy")
-    expect(frame).toContain("Planowanie")
-    expect(frame).toContain("Diagnostyka")
-    expect(frame).toContain("Automat")
+    expect(frame).toContain("Work Mode")
+    expect(frame).toContain("Planning")
+    expect(frame).toContain("Diagnostics")
+    expect(frame).toContain("Automation")
     expect(frame).toContain("Agent List")
-    expect(frame).toContain("Koordynator")
-    expect(frame).toContain("Planista")
-    expect(frame).toContain("Wykonawca")
-    expect(frame).toContain("Recenzent")
-    expect(frame).not.toContain("przykładowe statusy")
+    expect(frame).toContain("Lead Coordinator")
+    expect(frame).toContain("Planner")
+    expect(frame).toContain("Builder")
+    expect(frame).toContain("Reviewer")
+    expect(frame).not.toContain("gotowe")
+    expect(frame).not.toContain("pracuje")
+  } finally {
+    app.renderer.destroy()
+  }
+})
+
+test("legacy Polish session mode metadata remains recognized", async () => {
+  const app = await testRender(
+    () =>
+      <SidebarWorkMode
+        context={context({
+          sessions: [
+            {
+              id: "root",
+              metadata: { "customOpenCode.workMode": "Diagnostyka" },
+              time: { updated: "2026-01-01T00:00:00Z" },
+            },
+          ],
+        })}
+        sessionID="root"
+      />,
+    { width: 54, height: 20 },
+  )
+
+  try {
+    await app.renderOnce()
+    const diagnostics = app.renderer.root.findDescendantById("sidebar.work-mode.Diagnostics")! as BoxRenderable
+    const automation = app.renderer.root.findDescendantById("sidebar.work-mode.Automation")! as BoxRenderable
+    expect(diagnostics.backgroundColor.toInts()).not.toEqual([0, 0, 0, 0])
+    expect(automation.backgroundColor.toInts()).toEqual([0, 0, 0, 0])
   } finally {
     app.renderer.destroy()
   }
@@ -138,13 +175,13 @@ test("agent activity uses distinct states and keeps idle agents at the bottom", 
         context={
           context({
             agents: [
-              { id: "idle", name: "idle", description: "Bezczynny" },
-              { id: "complete", name: "complete", description: "Ukończony" },
-              { id: "queued", name: "queued", description: "W kolejce" },
-              { id: "working", name: "working", description: "Pracujący" },
-              { id: "error", name: "error", description: "Błąd" },
-              { id: "decision", name: "decision", description: "Decyzja" },
-              { id: "question", name: "question", description: "Pytanie" },
+              { id: "idle", name: "idle", description: "Idle" },
+              { id: "complete", name: "complete", description: "Completed" },
+              { id: "queued", name: "queued", description: "Queued" },
+              { id: "working", name: "working", description: "Working" },
+              { id: "error", name: "error", description: "Error" },
+              { id: "decision", name: "decision", description: "Needs Decision" },
+              { id: "question", name: "question", description: "Question" },
             ],
             sessions: [
               { id: "root", time: { updated: "2026-01-01T00:00:00Z" } },
@@ -200,15 +237,15 @@ test("agent activity uses distinct states and keeps idle agents at the bottom", 
   try {
     await app.renderOnce()
     const frame = app.captureCharFrame()
-    const names = ["Decyzja", "Pytanie", "Błąd", "Pracujący", "W kolejce", "Ukończony", "Bezczynny"]
+    const names = ["Needs Decision", "Question", "Error", "Working", "Queued", "Completed", "Idle"]
     const positions = names.map((name) => frame.indexOf(name))
     expect(positions.every((position) => position >= 0)).toBe(true)
     expect(positions).toEqual([...positions].sort((left, right) => left - right))
-    expect(frame).toContain("decyzja")
-    expect(frame).toContain("błąd")
-    expect(frame).toContain("pracuje")
-    expect(frame).toContain("kolejka")
-    expect(frame).toContain("gotowe")
+    expect(frame).not.toContain("decyzja")
+    expect(frame).not.toContain("błąd")
+    expect(frame).not.toContain("pracuje")
+    expect(frame).not.toContain("kolejka")
+    expect(frame).not.toContain("gotowe")
     expect(frame).toContain("?")
     expect(frame).toContain("!")
     expect(frame).toContain("⚒")
@@ -252,18 +289,18 @@ test("work mode can be selected and both sidebar sections collapse independently
 
   try {
     await app.renderOnce()
-    const planowanie = app.renderer.root.findDescendantById("sidebar.work-mode.Planowanie")! as BoxRenderable
-    const automat = app.renderer.root.findDescendantById("sidebar.work-mode.Automat")! as BoxRenderable
-    expect(automat.backgroundColor.toInts()).not.toEqual([0, 0, 0, 0])
+    const planning = app.renderer.root.findDescendantById("sidebar.work-mode.Planning")! as BoxRenderable
+    const automation = app.renderer.root.findDescendantById("sidebar.work-mode.Automation")! as BoxRenderable
+    expect(automation.backgroundColor.toInts()).not.toEqual([0, 0, 0, 0])
 
-    await app.mockMouse.click(planowanie.x, planowanie.y)
+    await app.mockMouse.click(planning.x, planning.y)
     await app.renderOnce()
     expect(updates).toEqual([
       {
         sessionID: "root",
         metadata: {
           projectTag: "preserve",
-          "customOpenCode.workMode": "Planowanie",
+          "customOpenCode.workMode": "Planning",
           "customOpenCode.basePermissions": basePermissions,
         },
         permissions: [
@@ -284,17 +321,17 @@ test("work mode can be selected and both sidebar sections collapse independently
         ],
       },
     ])
-    expect(planowanie.backgroundColor.toInts()).not.toEqual([0, 0, 0, 0])
-    expect(automat.backgroundColor.toInts()).toEqual([0, 0, 0, 0])
+    expect(planning.backgroundColor.toInts()).not.toEqual([0, 0, 0, 0])
+    expect(automation.backgroundColor.toInts()).toEqual([0, 0, 0, 0])
 
-    const diagnostyka = app.renderer.root.findDescendantById("sidebar.work-mode.Diagnostyka")! as BoxRenderable
-    await app.mockMouse.click(diagnostyka.x, diagnostyka.y)
+    const diagnostics = app.renderer.root.findDescendantById("sidebar.work-mode.Diagnostics")! as BoxRenderable
+    await app.mockMouse.click(diagnostics.x, diagnostics.y)
     await app.renderOnce()
     expect(updates[1]).toEqual({
       sessionID: "root",
       metadata: {
         projectTag: "preserve",
-        "customOpenCode.workMode": "Diagnostyka",
+        "customOpenCode.workMode": "Diagnostics",
         "customOpenCode.basePermissions": basePermissions,
       },
       permissions: [
@@ -313,24 +350,24 @@ test("work mode can be selected and both sidebar sections collapse independently
       ],
     })
 
-    await app.mockMouse.click(automat.x, automat.y)
+    await app.mockMouse.click(automation.x, automation.y)
     await app.renderOnce()
     expect(updates[2]).toEqual({
       sessionID: "root",
-      metadata: { projectTag: "preserve", "customOpenCode.workMode": "Automat" },
+      metadata: { projectTag: "preserve", "customOpenCode.workMode": "Automation" },
       permissions: basePermissions,
     })
 
     const modeToggle = app.renderer.root.findDescendantById("sidebar.work-mode.toggle")!
     await app.mockMouse.click(modeToggle.x, modeToggle.y)
     await app.renderOnce()
-    expect(app.captureCharFrame()).not.toContain("Diagnostyka")
+    expect(app.captureCharFrame()).not.toContain("Diagnostics")
     expect(app.captureCharFrame()).toContain("Agent List")
 
     const agentToggle = app.renderer.root.findDescendantById("sidebar.agent-list.toggle")!
     await app.mockMouse.click(agentToggle.x, agentToggle.y)
     await app.renderOnce()
-    expect(app.captureCharFrame()).not.toContain("Koordynator")
+    expect(app.captureCharFrame()).not.toContain("Lead Coordinator")
     expect(app.captureCharFrame()).toContain("Agent List")
   } finally {
     app.renderer.destroy()

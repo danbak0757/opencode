@@ -1,5 +1,5 @@
 ---
-description: "Inżynier CI i automatyzacji — H. Platforma, wdrażanie i operacje"
+description: "CI Engineer"
 mode: subagent
 permissions:
   - action: subagent

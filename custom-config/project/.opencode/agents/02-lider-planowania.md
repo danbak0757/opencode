@@ -1,5 +1,5 @@
 ---
-description: "Lider Planowania — A. Kierownictwo i koordynacja"
+description: "Planning Lead"
 mode: subagent
 permissions:
   - action: subagent

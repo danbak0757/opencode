@@ -1,5 +1,5 @@
 ---
-description: "Lider Automatu / realizacji — A. Kierownictwo i koordynacja"
+description: "Delivery Lead"
 mode: subagent
 permissions:
   - action: subagent

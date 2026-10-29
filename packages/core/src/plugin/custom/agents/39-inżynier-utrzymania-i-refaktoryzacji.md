@@ -1,5 +1,5 @@
 ---
-description: "Inżynier utrzymania i refaktoryzacji — E. Architektura i inżynieria"
+description: "Refactoring Engineer"
 mode: subagent
 permissions:
   - action: subagent

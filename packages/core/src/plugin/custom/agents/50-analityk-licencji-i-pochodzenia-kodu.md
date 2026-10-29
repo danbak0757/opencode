@@ -1,5 +1,5 @@
 ---
-description: "Analityk licencji i pochodzenia kodu — G. Bezpieczeństwo, prywatność i zgodność"
+description: "License Analyst"
 mode: subagent
 permissions:
   - action: subagent

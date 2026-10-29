@@ -1,5 +1,5 @@
 ---
-description: "Inżynier niezawodności i odporności — F. Testowanie i jakość"
+description: "Reliability Engineer"
 mode: subagent
 permissions:
   - action: subagent

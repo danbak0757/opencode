@@ -25,7 +25,7 @@ export function SidebarContext(props: { context: Plugin.Context; sessionID: stri
       <box>
         <SidebarSectionHeading
           id="sidebar.context.session.toggle"
-          title="Sesja"
+          title="Session"
           open={sessionOpen()}
           color={theme.text.base}
           onToggle={() => setSessionOpen((value) => !value)}
@@ -42,7 +42,7 @@ export function SidebarContext(props: { context: Plugin.Context; sessionID: stri
             )}
           </Show>
           <Show when={cost() > 0}>
-            <UsageRow label="Koszt" value={money.format(cost())} color={theme.text.muted} />
+            <UsageRow label="Cost" value={money.format(cost())} color={theme.text.muted} />
           </Show>
         </Show>
       </box>
@@ -52,17 +52,17 @@ export function SidebarContext(props: { context: Plugin.Context; sessionID: stri
           <box>
             <SidebarSectionHeading
               id="sidebar.context.answer.toggle"
-              title="Ostatnia odpowiedź"
+              title="Last Response"
               open={answerOpen()}
               color={theme.text.base}
               onToggle={() => setAnswerOpen((current) => !current)}
             />
             <Show when={answerOpen()}>
-              <UsageRow label="Wejściowe" value={value().input.toLocaleString()} color={theme.text.muted} />
-              <UsageRow label="Wyjściowe" value={value().output.toLocaleString()} color={theme.text.muted} />
-              <UsageRow label="Myślenie" value={value().reasoning.toLocaleString()} color={theme.text.muted} />
+              <UsageRow label="Input" value={value().input.toLocaleString()} color={theme.text.muted} />
+              <UsageRow label="Output" value={value().output.toLocaleString()} color={theme.text.muted} />
+              <UsageRow label="Reasoning" value={value().reasoning.toLocaleString()} color={theme.text.muted} />
               <UsageRow label="Cache" value={value().cache.toLocaleString()} color={theme.text.muted} />
-              <UsageRow label="Łącznie" value={value().tokens.toLocaleString()} color={theme.text.muted} bold />
+              <UsageRow label="Total" value={value().tokens.toLocaleString()} color={theme.text.muted} bold />
             </Show>
           </box>
         )}

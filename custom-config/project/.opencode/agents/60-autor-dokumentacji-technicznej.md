@@ -1,5 +1,5 @@
 ---
-description: "Autor dokumentacji technicznej — I. Dokumentacja i komunikacja"
+description: "Technical Writer"
 mode: subagent
 permissions:
   - action: subagent

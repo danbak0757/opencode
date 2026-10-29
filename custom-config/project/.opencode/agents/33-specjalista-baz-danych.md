@@ -1,5 +1,5 @@
 ---
-description: "Specjalista baz danych — E. Architektura i inżynieria"
+description: "Database Specialist"
 mode: subagent
 permissions:
   - action: subagent

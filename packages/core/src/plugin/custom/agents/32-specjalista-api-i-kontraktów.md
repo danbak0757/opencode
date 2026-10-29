@@ -1,5 +1,5 @@
 ---
-description: "Specjalista API i kontraktów — E. Architektura i inżynieria"
+description: "API Engineer"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Architekt jakości — F. Testowanie i jakość"
+description: "QA Architect"
 mode: subagent
 permissions:
   - action: subagent

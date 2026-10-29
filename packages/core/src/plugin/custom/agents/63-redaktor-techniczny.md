@@ -1,5 +1,5 @@
 ---
-description: "Redaktor techniczny — I. Dokumentacja i komunikacja"
+description: "Technical Editor"
 mode: subagent
 permissions:
   - action: subagent

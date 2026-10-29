@@ -1,5 +1,5 @@
 ---
-description: "Projektant prototypów — D. Projektowanie i doświadczenie użytkownika"
+description: "Prototype Designer"
 mode: subagent
 permissions:
   - action: subagent

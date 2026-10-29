@@ -71,7 +71,7 @@ import { useWorkingDirectoryActions } from "../../ui/working-directory-actions"
 import { truncateFilePath } from "../../ui/file-path"
 import { PromptMetadataRow } from "./metadata"
 import { limitLabel, useUsageLimits } from "../usage"
-import { WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../../context/work-mode"
+import { normalizeWorkMode, WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../../context/work-mode"
 import { useStorage } from "../../context/storage"
 
 interface SessionPermissionRule {
@@ -215,7 +215,7 @@ export function Prompt(props: PromptProps) {
   const client = useClient()
   const storage = useStorage()
   const [savedWorkMode] = storage.store<WorkModePreference>(WORK_MODE_STORAGE_KEY, {
-    initial: { mode: "Automat" },
+    initial: { mode: "Automation" },
   })
   const [workModePreference] = storage.memory<WorkModePreference>("active-work-mode", {
     initial: { mode: savedWorkMode.mode },
@@ -1258,7 +1258,7 @@ export function Prompt(props: PromptProps) {
       // immediately — enter feels sent even while the create round-trip is in
       // flight. Sends against the new session gate on the request.
       const newSessionID = args.takeNewSessionID()
-      const selectedWorkMode = workModePreference.mode
+      const selectedWorkMode = normalizeWorkMode(workModePreference.mode) ?? "Automation"
       const created = data.session.create({
         id: newSessionID,
         location: directory ? { directory } : location,
@@ -1275,10 +1275,10 @@ export function Prompt(props: PromptProps) {
       session = data.session.get(created.id)
       newSession = {
         gate: created.request.then(async (info) => {
-          if (selectedWorkMode === "Planowanie" || selectedWorkMode === "Diagnostyka") {
+          if (selectedWorkMode === "Planning" || selectedWorkMode === "Diagnostics") {
             const baseline = info.permissions ?? []
             const restrictedActions =
-              selectedWorkMode === "Planowanie" ? [...READ_ONLY_ACTIONS, "edit", "external_directory"] : READ_ONLY_ACTIONS
+              selectedWorkMode === "Planning" ? [...READ_ONLY_ACTIONS, "edit", "external_directory"] : READ_ONLY_ACTIONS
             await client.api.session.update({
               sessionID: created.id,
               metadata: {
@@ -1289,7 +1289,7 @@ export function Prompt(props: PromptProps) {
               permissions: [
                 ...baseline,
                 ...READ_ONLY_PERMISSIONS,
-                ...(selectedWorkMode === "Planowanie"
+                ...(selectedWorkMode === "Planning"
                   ? [
                       { action: "edit", resource: "*", effect: "ask" as const },
                       { action: "external_directory", resource: "*", effect: "ask" as const },

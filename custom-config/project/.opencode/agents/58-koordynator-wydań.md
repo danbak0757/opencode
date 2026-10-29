@@ -1,5 +1,5 @@
 ---
-description: "Koordynator wydań — H. Platforma, wdrażanie i operacje"
+description: "Release Coordinator"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Kontroler zakresu, ryzyka i zgód — A. Kierownictwo i koordynacja"
+description: "Scope & Risk"
 mode: subagent
 permissions:
   - action: subagent

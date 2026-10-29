@@ -1,5 +1,5 @@
 ---
-description: "Audytor łańcucha dostaw — G. Bezpieczeństwo, prywatność i zgodność"
+description: "Supply Chain Auditor"
 mode: subagent
 permissions:
   - action: subagent

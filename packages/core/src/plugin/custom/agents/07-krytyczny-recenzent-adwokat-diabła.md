@@ -1,5 +1,5 @@
 ---
-description: "Krytyczny recenzent / adwokat diabła — A. Kierownictwo i koordynacja"
+description: "Critical Reviewer"
 mode: subagent
 permissions:
   - action: subagent

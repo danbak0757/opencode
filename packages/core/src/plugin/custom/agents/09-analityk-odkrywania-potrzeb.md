@@ -1,5 +1,5 @@
 ---
-description: "Analityk odkrywania potrzeb — B. Produkt i analiza potrzeb"
+description: "User Research"
 mode: subagent
 permissions:
   - action: subagent

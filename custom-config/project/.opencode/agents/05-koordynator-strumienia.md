@@ -1,5 +1,5 @@
 ---
-description: "Koordynator strumienia — A. Kierownictwo i koordynacja"
+description: "Stream Coordinator"
 mode: subagent
 permissions:
   - action: subagent

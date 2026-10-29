@@ -1,5 +1,5 @@
 ---
-description: "Inżynier desktop i TUI — E. Architektura i inżynieria"
+description: "Desktop Engineer"
 mode: subagent
 permissions:
   - action: subagent

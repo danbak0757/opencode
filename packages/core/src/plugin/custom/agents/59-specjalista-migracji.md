@@ -1,5 +1,5 @@
 ---
-description: "Specjalista migracji — H. Platforma, wdrażanie i operacje"
+description: "Migration Specialist"
 mode: subagent
 permissions:
   - action: subagent

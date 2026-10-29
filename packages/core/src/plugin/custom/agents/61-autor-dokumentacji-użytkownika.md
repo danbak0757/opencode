@@ -1,5 +1,5 @@
 ---
-description: "Autor dokumentacji użytkownika — I. Dokumentacja i komunikacja"
+description: "User Docs Writer"
 mode: subagent
 permissions:
   - action: subagent

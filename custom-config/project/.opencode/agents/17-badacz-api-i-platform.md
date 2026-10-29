@@ -1,5 +1,5 @@
 ---
-description: "Badacz API i platform — C. Badania i źródła"
+description: "API Researcher"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Lider Diagnostyki — A. Kierownictwo i koordynacja"
+description: "Diagnostics Lead"
 mode: subagent
 permissions:
   - action: subagent

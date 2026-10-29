@@ -1,5 +1,5 @@
 ---
-description: "Analityk priorytetów i portfela — B. Produkt i analiza potrzeb"
+description: "Portfolio Analyst"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Inżynier niezawodności usług (SRE) — H. Platforma, wdrażanie i operacje"
+description: "SRE"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Specjalista prywatności i danych — G. Bezpieczeństwo, prywatność i zgodność"
+description: "Privacy Specialist"
 mode: subagent
 permissions:
   - action: subagent

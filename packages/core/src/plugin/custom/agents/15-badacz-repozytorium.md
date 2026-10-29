@@ -1,5 +1,5 @@
 ---
-description: "Badacz repozytorium — C. Badania i źródła"
+description: "Repository Researcher"
 mode: subagent
 permissions:
   - action: subagent

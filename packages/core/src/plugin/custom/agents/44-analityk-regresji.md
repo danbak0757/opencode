@@ -1,5 +1,5 @@
 ---
-description: "Analityk regresji — F. Testowanie i jakość"
+description: "Regression Analyst"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Architekt aplikacji — E. Architektura i inżynieria"
+description: "App Architect"
 mode: subagent
 permissions:
   - action: subagent

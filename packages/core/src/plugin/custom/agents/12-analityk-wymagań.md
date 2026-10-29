@@ -1,5 +1,5 @@
 ---
-description: "Analityk wymagań — B. Produkt i analiza potrzeb"
+description: "Requirements Analyst"
 mode: subagent
 permissions:
   - action: subagent

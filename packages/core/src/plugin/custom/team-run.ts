@@ -164,8 +164,10 @@ export default Plugin.define({
             throw new Error("team_run is restricted to primary coordinator agents.")
           }
           const parentSession = await ctx.session.get({ sessionID: toolContext.sessionID })
-          const workMode = parentSession.metadata?.[MODE_METADATA_KEY] ?? "Automat"
-          if (workMode !== "Automat" && input.tasks.some((task) => task.writeScope.length > 0)) {
+          const savedMode = parentSession.metadata?.[MODE_METADATA_KEY]
+          const workMode =
+            savedMode === undefined || savedMode === "Automation" || savedMode === "Automat" ? "Automation" : "Restricted"
+          if (workMode !== "Automation" && input.tasks.some((task) => task.writeScope.length > 0)) {
             throw new Error(`Write scopes are not allowed in ${String(workMode)} mode; use read-only tasks with writeScope: [].`)
           }
 
@@ -192,7 +194,7 @@ export default Plugin.define({
                 parentID: toolContext.sessionID,
                 title: `${task.id}: ${task.goal}`,
                 agent: task.agent,
-                metadata: { ...parentSession.metadata, [MODE_METADATA_KEY]: workMode },
+                metadata: { ...parentSession.metadata, [MODE_METADATA_KEY]: savedMode ?? "Automation" },
                 permissions: parentSession.permissions,
               })
               sessionID = child.id

@@ -1,5 +1,5 @@
 ---
-description: "Specjalista doboru i routingu modeli — J. Koszt i obsługa"
+description: "Model Routing Specialist"
 mode: subagent
 permissions:
   - action: subagent

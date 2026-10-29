@@ -1,5 +1,5 @@
 ---
-description: "Inżynier DevOps — H. Platforma, wdrażanie i operacje"
+description: "DevOps Engineer"
 mode: subagent
 permissions:
   - action: subagent

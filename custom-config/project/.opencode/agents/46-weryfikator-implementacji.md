@@ -1,5 +1,5 @@
 ---
-description: "Weryfikator implementacji — F. Testowanie i jakość"
+description: "Implementation Reviewer"
 mode: subagent
 permissions:
   - action: subagent

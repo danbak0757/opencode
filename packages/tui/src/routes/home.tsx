@@ -15,7 +15,7 @@ import { useTheme } from "../context/theme"
 import { useUpdateNotification } from "../context/update-notification"
 import { useExit } from "../context/exit"
 import { FadeInText } from "../component/fade-in-text"
-import { isWorkMode, WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../context/work-mode"
+import { normalizeWorkMode, WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../context/work-mode"
 import { useStorage } from "../context/storage"
 
 let once = false
@@ -34,10 +34,16 @@ export function Home() {
   const data = useData()
   const storage = useStorage()
   const [workMode, updateWorkMode] = storage.store<WorkModePreference>(WORK_MODE_STORAGE_KEY, {
-    initial: { mode: "Automat" },
+    initial: { mode: "Automation" },
   })
   const [activeWorkMode, setActiveWorkMode] = storage.memory<WorkModePreference>("active-work-mode", {
     initial: { mode: workMode.mode },
+  })
+  createEffect(() => {
+    const normalized = normalizeWorkMode(workMode.mode)
+    if (!normalized || normalized === workMode.mode) return
+    void updateWorkMode((draft) => void (draft.mode = normalized))
+    setActiveWorkMode((draft) => void (draft.mode = normalized))
   })
   const location = useLocation()
   const dimensions = useTerminalDimensions()
@@ -113,9 +119,10 @@ export function Home() {
             input={{
               workMode: activeWorkMode.mode,
               onWorkModeChange: (mode) => {
-                if (!isWorkMode(mode)) return
-                setActiveWorkMode((draft) => void (draft.mode = mode))
-                void updateWorkMode((draft) => void (draft.mode = mode))
+                const normalized = normalizeWorkMode(mode)
+                if (!normalized) return
+                setActiveWorkMode((draft) => void (draft.mode = normalized))
+                void updateWorkMode((draft) => void (draft.mode = normalized))
               },
             }}
           />

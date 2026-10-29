@@ -1,5 +1,5 @@
 ---
-description: "Analityk domenowy — B. Produkt i analiza potrzeb"
+description: "Domain Analyst"
 mode: subagent
 permissions:
   - action: subagent

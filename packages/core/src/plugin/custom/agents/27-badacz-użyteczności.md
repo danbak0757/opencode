@@ -1,5 +1,5 @@
 ---
-description: "Badacz użyteczności — D. Projektowanie i doświadczenie użytkownika"
+description: "Usability Researcher"
 mode: subagent
 permissions:
   - action: subagent

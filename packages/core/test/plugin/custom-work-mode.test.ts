@@ -39,7 +39,7 @@ test("injects shared rules and the selected mode without duplicating existing in
 
   await contextHook(event)
   const diagnostics = event.system.filter((part) => part.type === "text").map((part) => part.text).join("\n")
-  expect(diagnostics).toContain("SYSTEM MODE — DIAGNOSTYKA")
+  expect(diagnostics).toContain("SYSTEM MODE — DIAGNOSTICS")
   expect(diagnostics).toContain("# Global Agent Rules")
   expect(diagnostics).toContain("# Interaktywny protokół pytań")
   expect(diagnostics).toContain("# Wspólny protokół współpracy agentów")
@@ -49,21 +49,21 @@ test("injects shared rules and the selected mode without duplicating existing in
   event.system = [{ type: "text", text: CustomInstructions.coordination }]
   await contextHook(event)
   const planning = event.system.filter((part) => part.type === "text").map((part) => part.text).join("\n")
-  expect(planning).toContain("SYSTEM MODE — PLANOWANIE")
+  expect(planning).toContain("SYSTEM MODE — PLANNING")
   expect(event.system.filter((part) => part.type === "text" && part.text === CustomInstructions.coordination)).toHaveLength(1)
 
   workMode = "Automat"
   event.system = []
   await contextHook(event)
-  const automated = event.system.find((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMAT"))
+  const automated = event.system.find((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMATION"))
   if (!automated || automated.type !== "text") throw new Error("Expected the Automate mode instructions")
   event.system = [automated]
   await contextHook(event)
-  expect(event.system.filter((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMAT"))).toHaveLength(1)
+  expect(event.system.filter((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMATION"))).toHaveLength(1)
 
-  event.system = [{ type: "text", text: "SYSTEM MODE — stale Diagnostyka instruction" }]
+  event.system = [{ type: "text", text: "SYSTEM MODE — stale DIAGNOSTICS instruction" }]
   await contextHook(event)
   expect(
-    event.system.some((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMAT (domyślny)")),
+    event.system.some((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMATION (domyślny)")),
   ).toBe(true)
 })

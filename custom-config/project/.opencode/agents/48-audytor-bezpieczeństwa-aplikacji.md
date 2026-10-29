@@ -1,5 +1,5 @@
 ---
-description: "Audytor bezpieczeństwa aplikacji — G. Bezpieczeństwo, prywatność i zgodność"
+description: "App Security Auditor"
 mode: subagent
 permissions:
   - action: subagent

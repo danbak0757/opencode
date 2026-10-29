@@ -1,5 +1,5 @@
 ---
-description: "Analityk wsparcia i reprodukcji — J. Koszt i obsługa"
+description: "Support Analyst"
 mode: subagent
 permissions:
   - action: subagent

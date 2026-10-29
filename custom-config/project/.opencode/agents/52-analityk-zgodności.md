@@ -1,5 +1,5 @@
 ---
-description: "Analityk zgodności — G. Bezpieczeństwo, prywatność i zgodność"
+description: "Compliance Analyst"
 mode: subagent
 permissions:
   - action: subagent

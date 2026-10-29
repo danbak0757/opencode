@@ -41,7 +41,7 @@ test("registers team_run and waits for an independent batch to finish", async ()
   const completeBatch = Promise.withResolvers<void>()
   const childSessions = new Map<string, string>()
   const inherited = new Map<string, { metadata: Record<string, unknown>; permissions: unknown[] }>()
-  const parentMetadata = { "customOpenCode.workMode": "Diagnostyka", parentKey: "preserved" }
+  const parentMetadata = { parentKey: "preserved" }
   const parentPermissions = [{ action: "*", resource: "*", effect: "deny" }]
   let nextChild = 0
   let started = 0
@@ -96,8 +96,8 @@ test("registers team_run and waits for an independent batch to finish", async ()
   const result = await teamRun.execute(
     {
       tasks: [
-        { id: "frontend", agent: "frontend", goal: "Inspect UI", prompt: "Inspect the UI.", writeScope: [] },
-        { id: "review", agent: "reviewer", goal: "Review UI", prompt: "Review the UI.", writeScope: [] },
+        { id: "frontend", agent: "frontend", goal: "Inspect UI", prompt: "Inspect the UI.", writeScope: ["src/ui"] },
+        { id: "review", agent: "reviewer", goal: "Review UI", prompt: "Review the UI.", writeScope: ["src/review"] },
       ],
     },
     toolContext(),
@@ -109,8 +109,14 @@ test("registers team_run and waits for an independent batch to finish", async ()
 
   expect(started).toBe(2)
   expect(childSessions.size).toBe(2)
-  expect(inherited.get("child-1")).toEqual({ metadata: parentMetadata, permissions: parentPermissions })
-  expect(inherited.get("child-2")).toEqual({ metadata: parentMetadata, permissions: parentPermissions })
+  expect(inherited.get("child-1")).toEqual({
+    metadata: { ...parentMetadata, "customOpenCode.workMode": "Automation" },
+    permissions: parentPermissions,
+  })
+  expect(inherited.get("child-2")).toEqual({
+    metadata: { ...parentMetadata, "customOpenCode.workMode": "Automation" },
+    permissions: parentPermissions,
+  })
   expect(report).toContain("Report from child-1")
   expect(report).toContain("Report from child-2")
 })

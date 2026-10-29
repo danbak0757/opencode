@@ -1,5 +1,5 @@
 ---
-description: "Badacz dokumentacji — C. Badania i źródła"
+description: "Docs Researcher"
 mode: subagent
 permissions:
   - action: subagent

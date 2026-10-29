@@ -1,5 +1,5 @@
 ---
-description: "Analityk biznesowy — B. Produkt i analiza potrzeb"
+description: "Business Analyst"
 mode: subagent
 permissions:
   - action: subagent

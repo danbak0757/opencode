@@ -1,5 +1,5 @@
 ---
-description: "Inżynier aplikacji mobilnych — E. Architektura i inżynieria"
+description: "Mobile Engineer"
 mode: subagent
 permissions:
   - action: subagent

@@ -1,5 +1,5 @@
 ---
-description: "Inżynier infrastruktury — H. Platforma, wdrażanie i operacje"
+description: "Infrastructure Engineer"
 mode: subagent
 permissions:
   - action: subagent

@@ -2,9 +2,9 @@ import type { SessionInfo } from "@opencode/client"
 import { Plugin } from "@opencode/plugin/tui"
 import { createMemo, createSignal, For, Show } from "solid-js"
 import { SidebarSectionHeading } from "./section-heading"
-import type { WorkMode } from "../../context/work-mode"
+import { normalizeWorkMode, type WorkMode } from "../../context/work-mode"
 
-const WORK_MODES = ["Planowanie", "Diagnostyka", "Automat"] as const satisfies readonly WorkMode[]
+const WORK_MODES = ["Planning", "Diagnostics", "Automation"] as const satisfies readonly WorkMode[]
 type AgentStatus = "completed" | "queued" | "working" | "error" | "decision" | "idle"
 interface SessionPermissionRule {
   action: string
@@ -42,13 +42,13 @@ const STATUS_ORDER: Record<AgentStatus, number> = {
   idle: 5,
 }
 
-const STATUS_PRESENTATION: Record<AgentStatus, { icon: string; label: string }> = {
-  completed: { icon: "✓", label: "gotowe" },
-  queued: { icon: "↻", label: "kolejka" },
-  working: { icon: "⚒", label: "pracuje" },
-  error: { icon: "!", label: "błąd" },
-  decision: { icon: "?", label: "decyzja" },
-  idle: { icon: "", label: "" },
+const STATUS_ICON: Record<AgentStatus, string> = {
+  completed: "✓",
+  queued: "↻",
+  working: "⚒",
+  error: "!",
+  decision: "?",
+  idle: "",
 }
 
 export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: string }) {
@@ -81,9 +81,7 @@ export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: str
 
   function readMode(): WorkMode {
     const saved = props.context.data.session.get(props.sessionID)?.metadata?.[MODE_METADATA_KEY]
-    return typeof saved === "string" && WORK_MODES.some((option) => option === saved)
-      ? (saved as WorkMode)
-      : "Automat"
+    return normalizeWorkMode(saved) ?? "Automation"
   }
 
   async function selectMode(option: WorkMode) {
@@ -96,36 +94,36 @@ export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: str
       let permissions: SessionPermissionRule[] | undefined
       let nextBaseline = restrictedModeBaseline()
 
-      if (option === "Planowanie" || option === "Diagnostyka") {
+      if (option === "Planning" || option === "Diagnostics") {
         const wasRestricted =
-          mode() !== "Automat" ||
-          current?.metadata?.[MODE_METADATA_KEY] === "Planowanie" ||
-          current?.metadata?.[MODE_METADATA_KEY] === "Diagnostyka"
+          mode() !== "Automation" ||
+          normalizeWorkMode(current?.metadata?.[MODE_METADATA_KEY]) === "Planning" ||
+          normalizeWorkMode(current?.metadata?.[MODE_METADATA_KEY]) === "Diagnostics"
         const baseline = wasRestricted
           ? readPermissionBaseline(current?.metadata?.[BASE_PERMISSIONS_METADATA_KEY]) ?? nextBaseline
           : current?.permissions ?? []
-        if (!baseline) throw new Error("Nie można bezpiecznie odtworzyć bazowych uprawnień tej sesji.")
+        if (!baseline) throw new Error("Could not safely restore this session's baseline permissions.")
         metadata[BASE_PERMISSIONS_METADATA_KEY] = baseline.map((rule) => ({ ...rule }))
         const retainedRestrictions = baseline.flatMap((rule) => {
           if (rule.effect === "allow") return []
           const restrictedActions =
-            option === "Planowanie" ? [...READ_ONLY_ACTIONS, "edit", "external_directory"] : READ_ONLY_ACTIONS
+            option === "Planning" ? [...READ_ONLY_ACTIONS, "edit", "external_directory"] : READ_ONLY_ACTIONS
           if (rule.action === "*") return restrictedActions.map((action) => ({ ...rule, action }))
           return restrictedActions.includes(rule.action) ? [rule] : []
         })
         permissions = [
           ...baseline,
-          ...(option === "Planowanie" ? PLAN_PERMISSIONS : READ_ONLY_PERMISSIONS),
+          ...(option === "Planning" ? PLAN_PERMISSIONS : READ_ONLY_PERMISSIONS),
           ...retainedRestrictions,
         ]
         nextBaseline = baseline
       } else if (
-        mode() !== "Automat" ||
-        current?.metadata?.[MODE_METADATA_KEY] === "Planowanie" ||
-        current?.metadata?.[MODE_METADATA_KEY] === "Diagnostyka"
+        mode() !== "Automation" ||
+        normalizeWorkMode(current?.metadata?.[MODE_METADATA_KEY]) === "Planning" ||
+        normalizeWorkMode(current?.metadata?.[MODE_METADATA_KEY]) === "Diagnostics"
       ) {
         const baseline = readPermissionBaseline(current?.metadata?.[BASE_PERMISSIONS_METADATA_KEY]) ?? nextBaseline
-        if (!baseline) throw new Error("Nie można bezpiecznie odtworzyć bazowych uprawnień tej sesji.")
+        if (!baseline) throw new Error("Could not safely restore this session's baseline permissions.")
         delete metadata[BASE_PERMISSIONS_METADATA_KEY]
         permissions = baseline
       }
@@ -136,11 +134,11 @@ export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: str
         ...(permissions === undefined ? {} : { permissions }),
       })
       setMode(option)
-      setRestrictedModeBaseline(option === "Automat" ? undefined : nextBaseline)
+      setRestrictedModeBaseline(option === "Automation" ? undefined : nextBaseline)
     } catch (error) {
       props.context.ui.toast.show({
-        title: `Nie udało się uruchomić trybu ${option}`,
-        message: error instanceof Error ? error.message : "Nieznany błąd podczas uruchamiania trybu.",
+        title: `Could not activate ${option} mode`,
+        message: error instanceof Error ? error.message : "An unknown error occurred while activating the mode.",
         variant: "error",
         sessionID: props.sessionID,
       })
@@ -173,7 +171,7 @@ export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: str
       <box>
         <SidebarSectionHeading
           id="sidebar.work-mode.toggle"
-          title="Tryb pracy"
+          title="Work Mode"
           open={modeOpen()}
           color={theme.text.base}
           onToggle={() => setModeOpen((value) => !value)}
@@ -214,13 +212,10 @@ export function SidebarWorkMode(props: { context: Plugin.Context; sessionID: str
           <For each={rows()}>
             {({ agent, status }) => (
               <box flexDirection="row" gap={1} minWidth={0}>
-                <text fg={statusColor(theme, status)}>{STATUS_PRESENTATION[status].icon || " "}</text>
+                <text fg={statusColor(theme, status)}>{STATUS_ICON[status] || " "}</text>
                 <text flexGrow={1} fg={status === "idle" ? theme.text.muted : theme.text.base} wrapMode="none" truncate>
-                  {agent.description?.split(" — ")[0] || agent.name}
+                  {agent.description || agent.name}
                 </text>
-                <Show when={status !== "idle"}>
-                  <text fg={statusColor(theme, status)}>{STATUS_PRESENTATION[status].label}</text>
-                </Show>
               </box>
             )}
           </For>

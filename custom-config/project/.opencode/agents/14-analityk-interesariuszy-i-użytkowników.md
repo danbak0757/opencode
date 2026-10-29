@@ -1,5 +1,5 @@
 ---
-description: "Analityk interesariuszy i użytkowników — B. Produkt i analiza potrzeb"
+description: "Stakeholder Analyst"
 mode: subagent
 permissions:
   - action: subagent
