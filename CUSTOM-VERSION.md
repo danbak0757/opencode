@@ -6,6 +6,8 @@ Ta gałąź jest niezależną, eksperymentalną wersją OpenCode rozwijaną na b
 
 Dostosować terminalowe OpenCode do pracy nad zadaniami programistycznymi z pomocą polskojęzycznego, wieloagentowego zespołu. Priorytetem jest jakość zaakceptowanego rezultatu przy możliwie niskim całkowitym koszcie — z uwzględnieniem delegowania, review, poprawek i czasu użytkownika.
 
+Gotowy do skopiowania pakiet agentów i ustawień znajduje się w [`custom-config/`](./custom-config/README.md). Samo sklonowanie repozytorium nie instaluje tych plików do globalnej konfiguracji użytkownika.
+
 ## Tryby pracy
 
 - **Planowanie** — analiza i doprecyzowanie zadania; zapis ograniczony do wskazanego pliku planu.
