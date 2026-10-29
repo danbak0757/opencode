@@ -19,6 +19,16 @@ The fork adds a custom **terminal UI (TUI)** and an agent-workflow layer for coo
 
 The fork-specific layer does not replace OpenCode's server API, authentication, or provider integrations. User and project configuration can still override bundled agent settings.
 
+### Screenshots
+
+![Welcome screen showing the 3 work modes and the default Lead Coordinator agent](./docs/images/custom-welcome.png)
+
+*The custom TUI welcome screen offers Work Modes and loads the bundled Lead Coordinator by default.*
+
+![Sidebar showing session context, token usage, modes, and the agent activity list](./docs/images/custom-sidebar.png)
+
+*The custom sidebar organizes token usage, Work Modes, and Agent List activity.*
+
 ## Work Modes
 
 | Mode | Intended use | Permission behavior |
