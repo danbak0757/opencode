@@ -9,7 +9,7 @@
 </p>
 <p align="center">The open source AI coding agent.</p>
 
-> **Custom fork:** This repository also contains a Polish-language work-mode experiment and sidebar enhancements. These changes are maintained independently and are not part of the official OpenCode release. See [Custom version overview](./CUSTOM-VERSION.md).
+> **Fan-made fork:** This repository adds an English-language custom terminal UI, three work modes, and a built-in catalog of 67 specialist agents to OpenCode. It is an independent community project, not an official OpenCode release and not affiliated with or endorsed by the OpenCode team. See the [Custom Version Overview](./CUSTOM-VERSION.md) for features, the full agent catalog, build instructions, and limitations.
 
 <p align="center">
   <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
@@ -19,27 +19,27 @@
 
 <p align="center">
   <a href="README.md">English</a> |
-  <a href="README.zh.md">简体中文</a> |
-  <a href="README.zht.md">繁體中文</a> |
-  <a href="README.ko.md">한국어</a> |
-  <a href="README.de.md">Deutsch</a> |
-  <a href="README.es.md">Español</a> |
-  <a href="README.fr.md">Français</a> |
-  <a href="README.it.md">Italiano</a> |
-  <a href="README.da.md">Dansk</a> |
-  <a href="README.ja.md">日本語</a> |
-  <a href="README.pl.md">Polski</a> |
-  <a href="README.ru.md">Русский</a> |
-  <a href="README.bs.md">Bosanski</a> |
-  <a href="README.ar.md">العربية</a> |
-  <a href="README.no.md">Norsk</a> |
-  <a href="README.br.md">Português (Brasil)</a> |
-  <a href="README.th.md">ไทย</a> |
-  <a href="README.tr.md">Türkçe</a> |
-  <a href="README.uk.md">Українська</a> |
-  <a href="README.bn.md">বাংলা</a> |
-  <a href="README.gr.md">Ελληνικά</a> |
-  <a href="README.vi.md">Tiếng Việt</a>
+  <a href="README.zh.md">Chinese (Simplified)</a> |
+  <a href="README.zht.md">Chinese (Traditional)</a> |
+  <a href="README.ko.md">Korean</a> |
+  <a href="README.de.md">German</a> |
+  <a href="README.es.md">Spanish</a> |
+  <a href="README.fr.md">French</a> |
+  <a href="README.it.md">Italian</a> |
+  <a href="README.da.md">Danish</a> |
+  <a href="README.ja.md">Japanese</a> |
+  <a href="README.pl.md">Polish</a> |
+  <a href="README.ru.md">Russian</a> |
+  <a href="README.bs.md">Bosnian</a> |
+  <a href="README.ar.md">Arabic</a> |
+  <a href="README.no.md">Norwegian</a> |
+  <a href="README.br.md">Portuguese (Brazil)</a> |
+  <a href="README.th.md">Thai</a> |
+  <a href="README.tr.md">Turkish</a> |
+  <a href="README.uk.md">Ukrainian</a> |
+  <a href="README.bn.md">Bengali</a> |
+  <a href="README.gr.md">Greek</a> |
+  <a href="README.vi.md">Vietnamese</a>
 </p>
 
 [![OpenCode Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://opencode.ai)
@@ -47,6 +47,8 @@
 ---
 
 ### Installation
+
+> The installation commands below install the **official upstream OpenCode**, not this fork. To use this fork's custom features, build this repository by following [Build and Run](./CUSTOM-VERSION.md#build-and-run).
 
 ```bash
 # YOLO
@@ -67,7 +69,7 @@ nix run github:anomalyco/opencode  # Nix
 
 ### Desktop App (BETA)
 
-OpenCode is also available as a desktop application. Download it from [opencode.ai/download](https://opencode.ai/download).
+The **official upstream OpenCode** is also available as a desktop application. This fan-made fork customizes the terminal CLI/TUI only; the official desktop downloads below do not include this fork's custom features. Download the upstream app from [opencode.ai/download](https://opencode.ai/download).
 
 | Platform              | Download                           |
 | --------------------- | ---------------------------------- |
@@ -87,7 +89,7 @@ The install script installs OpenCode to `$HOME/.opencode/bin`.
 
 ### Agents
 
-OpenCode includes two built-in agents you can switch between with the `Tab` key.
+The upstream OpenCode agents include two primary agents you can switch between with the `Tab` key.
 
 - **build** - Default, full-access agent for development work
 - **plan** - Read-only agent for analysis and code exploration
@@ -95,8 +97,10 @@ OpenCode includes two built-in agents you can switch between with the `Tab` key.
   - Asks permission before running bash commands
   - Ideal for exploring unfamiliar codebases or planning changes
 
-Also included is a **general** subagent for complex searches and multistep tasks.
+The upstream distribution also includes a **general** subagent for complex searches and multistep tasks.
 This is used internally and can be invoked using `@general` in messages.
+
+This fork adds 67 specialist agents on top of the upstream agents. See the [Custom Version Overview](./CUSTOM-VERSION.md#agent-catalog) for the complete catalog.
 
 Learn more about [agents](https://opencode.ai/v2/docs/agents).
 
