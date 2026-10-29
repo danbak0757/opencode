@@ -109,6 +109,7 @@ function taskPrompt(task: TeamTask): string {
   const scope = task.writeScope.length > 0 ? task.writeScope.join("\n- ") : "Read-only; do not modify files."
   return [
     "You are executing one independent workstream for the coordinating agent. Do not address the end user; return a concise handoff report to the coordinator.",
+    "Write the handoff in the original end user's language. The coordinator must preserve and identify that language in the work request; do not switch to the language of this tool prompt, your role definition, or project files.",
     `Task ID: ${task.id}`,
     `Goal: ${task.goal}`,
     `Write ownership: ${scope}`,

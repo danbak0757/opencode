@@ -3,6 +3,12 @@ import type { SessionContext } from "@opencode/plugin/promise/session"
 import { CustomInstructions } from "../custom-agents.js"
 
 const MODE_METADATA_KEY = "customOpenCode.workMode"
+const LANGUAGE_RULE_MARKER = "CUSTOM FORK RESPONSE LANGUAGE RULE"
+const LANGUAGE_RULE = [
+  `${LANGUAGE_RULE_MARKER} — highest priority for user-facing prose.`,
+  "Reply in the same language as the user's latest human-authored message. Detect the language from the user's words, not from the repository, agent profile, work mode, or language of injected instructions. A greeting such as 'hello' calls for an English reply. Apply this to greetings, answers, clarifying questions, summaries, errors, and delegated-agent reports. Do not switch languages just because project documentation or an agent role is written in another language.",
+  "When delegating, preserve the original user's language in each task prompt and explicitly tell child agents to use it. Keep code, identifiers, quoted source text, and literal strings unchanged unless the user asks to translate them.",
+].join("\n")
 const SHARED_INSTRUCTIONS = [
   { marker: "# Global Agent Rules", content: CustomInstructions.globalAgents },
   { marker: "# Interaktywny protokół pytań", content: CustomInstructions.questionProtocol },
@@ -57,6 +63,11 @@ export default Plugin.define({
       if (!event.system.some((part) => part.type === "text" && part.text.includes(MODE_INSTRUCTIONS[mode]))) {
         event.system.push({ type: "text", text: MODE_INSTRUCTIONS[mode] })
       }
+      const systemWithoutPreviousLanguageRule = event.system.filter(
+        (part) => part.type !== "text" || !part.text.includes(LANGUAGE_RULE_MARKER),
+      )
+      event.system.splice(0, event.system.length, ...systemWithoutPreviousLanguageRule)
+      event.system.push({ type: "text", text: LANGUAGE_RULE })
     }
 
     await ctx.session.hook("context", applyMode)

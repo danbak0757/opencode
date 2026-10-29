@@ -73,6 +73,7 @@ import { PromptMetadataRow } from "./metadata"
 import { limitLabel, useUsageLimits } from "../usage"
 import { normalizeWorkMode, WORK_MODE_STORAGE_KEY, type WorkModePreference } from "../../context/work-mode"
 import { useStorage } from "../../context/storage"
+import { customAgentLabel } from "../../feature-plugins/sidebar/custom-agent-labels"
 
 interface SessionPermissionRule {
   action: string
@@ -1611,7 +1612,7 @@ export function Prompt(props: PromptProps) {
       const agent = local.agent.current()
       const model = local.model.parsed()
       return {
-        agentLabel: agent ? Locale.titlecase(agent.id) : undefined,
+        agentLabel: agent ? customAgentLabel(agent.id) ?? Locale.titlecase(agent.id) : undefined,
         agentColor: agent ? local.agent.color(agent.id) : undefined,
         modelLabel: model.model,
         providerLabel: model.provider,

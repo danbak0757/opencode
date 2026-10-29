@@ -450,7 +450,11 @@ describe("SubagentTool", () => {
             model: childModel,
           })
           expect((yield* sessions.inbox(child.id)).find((message) => message.type === "user")?.payload.text).toBe(
-            "You are a subagent spawned by another session.\nreview this",
+            [
+              "You are a subagent spawned by another session.",
+              "Reply in the language of the original end user's request, including on continuations. The invoking agent must preserve or identify that language in this task prompt; do not switch to the language of your role instructions or project files.",
+              "review this",
+            ].join("\n"),
           )
 
           const fallback = yield* executeTool(registry, {
@@ -519,7 +523,17 @@ describe("SubagentTool", () => {
             (yield* sessions.inbox(childID)).flatMap((message) =>
               message.type === "user" ? [message.payload.text] : [],
             ),
-          ).toEqual(["You are a subagent spawned by another session.\nreview this", "continue this"])
+          ).toEqual([
+            [
+              "You are a subagent spawned by another session.",
+              "Reply in the language of the original end user's request, including on continuations. The invoking agent must preserve or identify that language in this task prompt; do not switch to the language of your role instructions or project files.",
+              "review this",
+            ].join("\n"),
+            [
+              "Reply in the language of the original end user's request, including on continuations. The invoking agent must preserve or identify that language in this task prompt; do not switch to the language of your role instructions or project files.",
+              "continue this",
+            ].join("\n"),
+          ])
           expect(second.content).toEqual([{ type: "text", text: completedOutput(childID) }])
         }),
       ),
@@ -570,7 +584,10 @@ describe("SubagentTool", () => {
             metadata: { sessionID: child.id, status: "running" },
           })
           expect((yield* sessions.inbox(child.id)).find((message) => message.type === "user")?.payload.text).toBe(
-            "continue while running",
+            [
+              "Reply in the language of the original end user's request, including on continuations. The invoking agent must preserve or identify that language in this task prompt; do not switch to the language of your role instructions or project files.",
+              "continue while running",
+            ].join("\n"),
           )
           expect((yield* jobs.get(child.id))?.status).toBe("running")
           yield* jobs.cancel(child.id)

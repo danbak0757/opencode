@@ -68,3 +68,7 @@ export const CUSTOM_AGENT_LABELS: Readonly<Record<string, string>> = {
   "66-analityk-wsparcia-i-reprodukcji": "Support Analyst",
   "67-analityk-incydentów": "Incident Analyst",
 } as const
+
+export function customAgentLabel(id: string) {
+  return CUSTOM_AGENT_LABELS[id]
+}

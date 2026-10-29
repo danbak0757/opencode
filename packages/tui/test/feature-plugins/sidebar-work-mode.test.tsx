@@ -4,6 +4,7 @@ import { BoxRenderable, RGBA } from "@opentui/core"
 import { testRender } from "@opentui/solid"
 import type { Context } from "@opencode/plugin/tui/context"
 import { normalizeWorkMode } from "../../src/context/work-mode"
+import { customAgentLabel } from "../../src/feature-plugins/sidebar/custom-agent-labels"
 import { SidebarWorkMode } from "../../src/feature-plugins/sidebar/work-mode"
 
 interface AgentFixture {
@@ -39,6 +40,11 @@ test("normalizes legacy stored work modes before session creation", () => {
   expect(normalizeWorkMode("Planowanie")).toBe("Planning")
   expect(normalizeWorkMode("Diagnostyka")).toBe("Diagnostics")
   expect(normalizeWorkMode("Automat")).toBe("Automation")
+})
+
+test("uses the canonical English label for the welcome-screen coordinator", () => {
+  expect(customAgentLabel("01-koordynator-główny")).toBe("Lead Coordinator")
+  expect(customAgentLabel("build")).toBeUndefined()
 })
 
 function context(options: ContextOptions = {}) {

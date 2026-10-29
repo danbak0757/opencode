@@ -87,6 +87,10 @@ const generatedLabels = [
   ...agentLabels.map((agent) => `  ${JSON.stringify(agent.id)}: ${JSON.stringify(agent.description)},`),
   "} as const",
   "",
+  "export function customAgentLabel(id: string) {",
+  "  return CUSTOM_AGENT_LABELS[id]",
+  "}",
+  "",
 ].join("\n")
 const generatedMatches = (await Bun.file(modulePath).text().catch(() => "")) === generated
 const generatedLabelsMatch = (await Bun.file(labelModulePath).text().catch(() => "")) === generatedLabels

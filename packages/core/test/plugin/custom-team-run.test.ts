@@ -41,6 +41,7 @@ test("registers team_run and waits for an independent batch to finish", async ()
   const completeBatch = Promise.withResolvers<void>()
   const childSessions = new Map<string, string>()
   const inherited = new Map<string, { metadata: Record<string, unknown>; permissions: unknown[] }>()
+  const childPrompts: string[] = []
   const parentMetadata = { parentKey: "preserved" }
   const parentPermissions = [{ action: "*", resource: "*", effect: "deny" }]
   let nextChild = 0
@@ -70,7 +71,9 @@ test("registers team_run and waits for an independent batch to finish", async ()
         inherited.set(id, { metadata: input.metadata ?? {}, permissions: input.permissions ?? [] })
         return { id }
       },
-      prompt: async () => undefined,
+      prompt: async (input: { text: string }) => {
+        childPrompts.push(input.text)
+      },
       wait: async () => {
         started++
         if (started === 2) completeBatch.resolve()
@@ -117,6 +120,7 @@ test("registers team_run and waits for an independent batch to finish", async ()
     metadata: { ...parentMetadata, "customOpenCode.workMode": "Automation" },
     permissions: parentPermissions,
   })
+  expect(childPrompts.every((prompt) => prompt.includes("Write the handoff in the original end user's language"))).toBe(true)
   expect(report).toContain("Report from child-1")
   expect(report).toContain("Report from child-2")
 })

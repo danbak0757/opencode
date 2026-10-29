@@ -44,6 +44,12 @@ test("injects shared rules and the selected mode without duplicating existing in
   expect(diagnostics).toContain("# Interaktywny protokół pytań")
   expect(diagnostics).toContain("# Wspólny protokół współpracy agentów")
   expect(diagnostics).toContain("# 04 — Wyszukiwanie rozwiązań, pakiety i licencje")
+  expect(diagnostics).toContain("CUSTOM FORK RESPONSE LANGUAGE RULE")
+  expect(diagnostics).toContain("Reply in the same language as the user's latest human-authored message")
+  expect(event.system.at(-1)).toMatchObject({
+    type: "text",
+    text: expect.stringContaining("CUSTOM FORK RESPONSE LANGUAGE RULE"),
+  })
 
   workMode = "Planowanie"
   event.system = [{ type: "text", text: CustomInstructions.coordination }]
@@ -61,9 +67,17 @@ test("injects shared rules and the selected mode without duplicating existing in
   await contextHook(event)
   expect(event.system.filter((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMATION"))).toHaveLength(1)
 
-  event.system = [{ type: "text", text: "SYSTEM MODE — stale DIAGNOSTICS instruction" }]
+  event.system = [
+    { type: "text", text: "CUSTOM FORK RESPONSE LANGUAGE RULE — stale language rule" },
+    { type: "text", text: "SYSTEM MODE — stale DIAGNOSTICS instruction" },
+  ]
   await contextHook(event)
   expect(
     event.system.some((part) => part.type === "text" && part.text.includes("SYSTEM MODE — AUTOMATION (domyślny)")),
   ).toBe(true)
+  expect(event.system.at(-1)).toMatchObject({
+    type: "text",
+    text: expect.stringContaining("CUSTOM FORK RESPONSE LANGUAGE RULE"),
+  })
+  expect(event.system.some((part) => part.text === "CUSTOM FORK RESPONSE LANGUAGE RULE — stale language rule")).toBe(false)
 })

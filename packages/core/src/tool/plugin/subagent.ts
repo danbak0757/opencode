@@ -212,9 +212,11 @@ export const Plugin = {
                 .prompt({
                   sessionID: child.id,
                   text:
-                    existing === undefined
-                      ? ["You are a subagent spawned by another session.", input.prompt].join("\n")
-                      : input.prompt,
+                    [
+                      ...(existing === undefined ? ["You are a subagent spawned by another session."] : []),
+                      "Reply in the language of the original end user's request, including on continuations. The invoking agent must preserve or identify that language in this task prompt; do not switch to the language of your role instructions or project files.",
+                      input.prompt,
+                    ].join("\n"),
                   ...(background && existing === undefined ? { resume: false } : {}),
                 })
                 .pipe(
