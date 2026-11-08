@@ -2,7 +2,68 @@
 
 Release notes for OpenCode V2, newest first.
 
-## v2.2.5 — 2026-10-30
+## v2.2.6 - 2026-11-08
+
+### Highlights
+
+- **Workspace MCP Event Watches**: The Console plugin can watch events exposed by workspace MCP servers and wake the associated sessions when watched events arrive. ([#62734](https://github.com/anomalyco/opencode/pull/62734), [#62662](https://github.com/anomalyco/opencode/pull/62662))
+- **Experimental Code Mode VM**: Added a bytecode VM engine with suspendable programs and support for idempotent, durable tool calls. The VM is experimental; its flag is enabled by default in development builds, not generally enabled in releases. ([#62357](https://github.com/anomalyco/opencode/pull/62357), [#62358](https://github.com/anomalyco/opencode/pull/62358), [#62413](https://github.com/anomalyco/opencode/pull/62413), [#62444](https://github.com/anomalyco/opencode/pull/62444), [#62459](https://github.com/anomalyco/opencode/pull/62459))
+- **Custom Fork Agents and Work Modes**: This fork bundles 67 specialist agents, three selectable work modes, a custom agent workflow, and an agent sidebar. Its `team_run` tool can delegate independent tasks to parallel agents and collect their reports. These are fork-specific additions, not upstream OpenCode features. See the [Custom Version Overview](./CUSTOM-VERSION.md). (fork commits `5c9e1211`, `756ef587`)
+
+### Core
+
+#### Improvements
+
+- MCP connections can be pooled across locations with `pool: true`. ([#61185](https://github.com/anomalyco/opencode/pull/61185))
+- MCP OAuth sign-in accepts a pasted redirect URL. ([#61706](https://github.com/anomalyco/opencode/pull/61706))
+- Code Mode supports in-memory `skill://` URIs. ([#60921](https://github.com/anomalyco/opencode/pull/60921))
+- Added an experimental endpoint for listing jobs. ([#60698](https://github.com/anomalyco/opencode/pull/60698))
+- Embedded server users can provide a custom `fetch` implementation for HTTP and MCP requests. ([#61582](https://github.com/anomalyco/opencode/pull/61582))
+- Added the `websearch.use` permission action for controlling web search access. ([#61557](https://github.com/anomalyco/opencode/pull/61557))
+
+#### Bug fixes
+
+- MCP tool results are no longer discarded solely because they do not match the server's declared output schema. ([#61254](https://github.com/anomalyco/opencode/pull/61254))
+- MCP prompts are preserved when a refresh fails. ([#62266](https://github.com/anomalyco/opencode/pull/62266))
+- A fresh database can import legacy `auth.json` credentials; an invalid legacy file no longer prevents database initialization. ([#62568](https://github.com/anomalyco/opencode/pull/62568))
+- Shell output now distinguishes exit and timeout status more clearly, and unmatched zsh globs are passed through. ([#62141](https://github.com/anomalyco/opencode/pull/62141))
+- Multi-line commands are preserved when using Microsoft Store PowerShell 7. ([#62522](https://github.com/anomalyco/opencode/pull/62522))
+- Web permission checks now match the requested URL as written, and Code Mode fetch redirects are checked against web permissions at each hop. ([#62373](https://github.com/anomalyco/opencode/pull/62373), [#60502](https://github.com/anomalyco/opencode/pull/60502))
+
+### TUI
+
+#### Improvements
+
+- Session exports are saved to the working directory. ([#62253](https://github.com/anomalyco/opencode/pull/62253))
+- The open-session menu recognizes an exact child-session ID, and transcript navigation works in subagent sessions. ([#62262](https://github.com/anomalyco/opencode/pull/62262), [#60817](https://github.com/anomalyco/opencode/pull/60817))
+- Models can be favorited even when their integration is not connected. ([#62244](https://github.com/anomalyco/opencode/pull/62244))
+- Ctrl+Z can suspend the app while a form or dialog is open. ([#62118](https://github.com/anomalyco/opencode/pull/62118))
+- The terminal's light or dark mode is preferred over a cached palette. ([#62248](https://github.com/anomalyco/opencode/pull/62248))
+- The TUI sidebar includes the fork's selectable work modes and specialist-agent catalog. (fork commit `5c9e1211`)
+
+### App and Desktop
+
+#### Improvements
+
+- Older sessions show dates in the command palette, and prompt history keeps 100 additional text-only prompts. ([#62314](https://github.com/anomalyco/opencode/pull/62314), [#62313](https://github.com/anomalyco/opencode/pull/62313))
+- User-message actions are available from a menu on each message. ([#60819](https://github.com/anomalyco/opencode/pull/60819))
+- The app supports organized project tabs, improved inbox handling, and tab actions for closing other tabs or tabs to the right. ([#61700](https://github.com/anomalyco/opencode/pull/61700), [#61445](https://github.com/anomalyco/opencode/pull/61445), [#61631](https://github.com/anomalyco/opencode/pull/61631))
+- Session tabs can show failures, and the inbox distinguishes unread sessions. ([#62077](https://github.com/anomalyco/opencode/pull/62077), [#61691](https://github.com/anomalyco/opencode/pull/61691))
+- GUI plugins can add actions to code blocks, provide settings controls, size their side panel, and add color themes. ([#61533](https://github.com/anomalyco/opencode/pull/61533), [#61527](https://github.com/anomalyco/opencode/pull/61527), [#61509](https://github.com/anomalyco/opencode/pull/61509), [#61485](https://github.com/anomalyco/opencode/pull/61485))
+
+#### Bug fixes
+
+- Pasted image data remains available if its temporary file is deleted before sending. ([#62057](https://github.com/anomalyco/opencode/pull/62057))
+- Composer input ignores keys owned by an active IME. ([#62318](https://github.com/anomalyco/opencode/pull/62318))
+- “Copy message” copies the full prompt. ([#62116](https://github.com/anomalyco/opencode/pull/62116))
+- Desktop context-menu actions for cut, copy, paste, and select all are translated. ([#62252](https://github.com/anomalyco/opencode/pull/62252))
+
+### Server and Integrations
+
+- File reads are served as downloads with explicit content headers. ([#62422](https://github.com/anomalyco/opencode/pull/62422))
+- Skill listings wait for plugins to load. ([#62569](https://github.com/anomalyco/opencode/pull/62569))
+
+## v2.2.5 - 2026-10-30
 
 ### Highlights
 
